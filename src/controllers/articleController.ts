@@ -1,7 +1,11 @@
 import { IMiddleware } from "koa-router";
 import { ResponseBody } from "../middleware/responseBody";
 
-import { createArticle, findArticles } from "../services/articleServices";
+import {
+  createArticle,
+  searchArticles,
+  findArticlesById,
+} from "../services/articleServices";
 import { ObjectId } from "mongodb";
 import { ASSETS_URL } from "../../config/environment";
 
@@ -28,7 +32,7 @@ export const uploadArticle: IMiddleware<any, {}> = async (ctx, next) => {
 
 // 后面还要修改
 export const showArticle: IMiddleware<any, {}> = async (ctx, next) => {
-  const articleList = (await findArticles("")).map((item) => {
+  const articleList = (await searchArticles("")).map((item) => {
     return {
       article_id: item._id.toString(),
       title: item.title,
@@ -39,4 +43,24 @@ export const showArticle: IMiddleware<any, {}> = async (ctx, next) => {
   });
   (ctx.body as ResponseBody).setDataProperty("articleList", articleList);
   await next();
+};
+
+export const getArticleDetail: IMiddleware<any, {}> = async (ctx, next) => {
+  const { article_id } = ctx.request.body as Record<string, any>;
+  const result = await findArticlesById(new ObjectId(article_id));
+  if (result.length) {
+    const article = result[0];
+    const article_info = {
+      author_id: article.authorId.toString(),
+      title: article.title,
+      content: article.content,
+      create_time: article.createTime,
+    };
+    (ctx.body as ResponseBody).setDataProperty("article_id", article_id);
+    (ctx.body as ResponseBody).setDataProperty("article_info", article_info);
+    await next();
+  } else {
+    (ctx.body as ResponseBody).setMsg("文章不存在");
+    return;
+  }
 };
