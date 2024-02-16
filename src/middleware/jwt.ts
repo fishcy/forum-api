@@ -12,7 +12,7 @@ export const authenticateJwt: IMiddleware<any, {}> = async (ctx, next) => {
 
   try {
     const decoded = verifyToken(token);
-    // 将payload写入ctx.state.user中，供后续的中间件使用
+    // 将decoded写入ctx.state.payload中，供后续的中间件使用
     ctx.state.payload = decoded;
     await next();
   } catch (err) {

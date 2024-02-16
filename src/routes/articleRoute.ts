@@ -5,6 +5,7 @@ import {
   uploadArticle,
   showArticle,
   getArticleDetail,
+  getUserArticles,
 } from "../controllers/articleController";
 import { setResponseBody } from "../middleware/responseBody";
 import { authenticateJwt } from "../middleware/jwt";
@@ -26,6 +27,8 @@ router.post("/upload-article", authenticateJwt, uploadArticle);
 
 router.get("/recommend", showArticle);
 
-router.post("/article-detail", authenticateJwt, getArticleDetail);
+router.get("/article-detail", authenticateJwt, getArticleDetail);
+
+router.get("/own-articles", authenticateJwt, getUserArticles);
 
 export default router;

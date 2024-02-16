@@ -17,16 +17,16 @@ type Body = {
 
 export const register: IMiddleware<any, {}> = async (ctx, next) => {
   const { email = "", phone = "", password = "" } = ctx.request.body as Body;
-
+  const responseBody = ctx.body as ResponseBody;
   // 校验
   if (!email || !phone || !password) {
-    (ctx.response.body as ResponseBody).setMsg("注册失败，输入不能为空！");
+    responseBody.setMsg("注册失败，输入不能为空！");
     return;
   }
   // 检查用户是否存在
   const isExisted = await checkUserExist(undefined, email, phone);
   if (isExisted) {
-    (ctx.response.body as ResponseBody).setMsg("用户已存在");
+    responseBody.setMsg("用户已存在");
     return;
   } else {
     // 创建用户
@@ -41,20 +41,19 @@ export const register: IMiddleware<any, {}> = async (ctx, next) => {
 };
 
 export const login: IMiddleware<any, {}> = async (ctx, next) => {
+  const responseBody = ctx.body as ResponseBody;
   const { authorization } = ctx.request.header;
   let user;
-  let _id: ObjectId;
   let token;
   // 有token
   if (authorization) {
     try {
       const result = verifyToken(authorization) as Record<string, any>;
-      _id = new ObjectId(result._id);
       token = authorization;
-      user = await findUser(_id);
+      user = await findUser(new ObjectId(result._id));
     } catch (err) {
       // token出错或过期
-      (ctx.response.body as ResponseBody).setMsg("出错或过期");
+      responseBody.setMsg("出错或过期");
       return;
     }
   } else {
@@ -66,16 +65,17 @@ export const login: IMiddleware<any, {}> = async (ctx, next) => {
       user = await findUser(undefined, email, phone);
       token = generateToken({ _id: user._id.toString() });
     } else {
-      (ctx.response.body as ResponseBody).setMsg("用户不存在");
+      responseBody.setMsg("用户不存在");
       return;
     }
   }
   await next();
-  const { username, avatar, themeColor } = user;
+  const { _id, username, avatar, themeColor } = user;
   ctx.response.set("authorization", token);
-  (ctx.response.body as ResponseBody).setDataProperty("username", username);
-  (ctx.response.body as ResponseBody).setDataProperty("avatar", avatar);
-  (ctx.response.body as ResponseBody).setDataProperty("themeColor", themeColor);
+  responseBody.setDataProperty("user_id", _id.toString());
+  responseBody.setDataProperty("username", username);
+  responseBody.setDataProperty("avatar", avatar);
+  responseBody.setDataProperty("themeColor", themeColor);
 };
 
 export const themeColor: IMiddleware<any, {}> = async (ctx, next) => {

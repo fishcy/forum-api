@@ -26,3 +26,9 @@ export const findArticlesById = async (_id: ObjectId) => {
     _id,
   });
 };
+
+export const findArticlesByAuthorId = async (authorId: ObjectId) => {
+  return await articleDao.findArticles({
+    authorId,
+  });
+};

@@ -15,7 +15,6 @@ connect().then(async () => {
   app.use(bodyParser());
   const { routes } = await import("./routes");
   routes(app);
-
   app.listen(PORT, () => {
     console.log(`http://localhost:${PORT}`);
   });

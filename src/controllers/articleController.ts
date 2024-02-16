@@ -5,22 +5,20 @@ import {
   createArticle,
   searchArticles,
   findArticlesById,
+  findArticlesByAuthorId,
 } from "../services/articleServices";
 import { ObjectId } from "mongodb";
 import { ASSETS_URL } from "../../config/environment";
+import { formatArticle } from "../utils/article";
 
 export const uploadImage: IMiddleware<any, {}> = async (ctx, next) => {
   const file = ctx.request.file;
-  (ctx.body as ResponseBody).setDataProperty(
-    "originalname",
-    file["originalname"]
-  );
-  (ctx.body as ResponseBody).setDataProperty(
-    "url",
-    `${ASSETS_URL}/${file["filename"]}`
-  );
-  (ctx.body as ResponseBody).setDataProperty("size", file["size"]);
-  (ctx.body as ResponseBody).setDataProperty("filename", file["filename"]);
+  const responseBody = ctx.body as ResponseBody;
+  responseBody.setDataProperty("originalname", file["originalname"]);
+  responseBody.setDataProperty("url", `${ASSETS_URL}/${file["filename"]}`);
+  responseBody.setDataProperty("size", file["size"]);
+  responseBody.setDataProperty("filename", file["filename"]);
+  await next();
 };
 
 export const uploadArticle: IMiddleware<any, {}> = async (ctx, next) => {
@@ -32,21 +30,15 @@ export const uploadArticle: IMiddleware<any, {}> = async (ctx, next) => {
 
 // 后面还要修改
 export const showArticle: IMiddleware<any, {}> = async (ctx, next) => {
-  const articleList = (await searchArticles("")).map((item) => {
-    return {
-      article_id: item._id.toString(),
-      title: item.title,
-      brief_content: item.content.substring(0, 30),
-      author_id: item.authorId.toString(),
-      create_time: item.createTime,
-    };
-  });
-  (ctx.body as ResponseBody).setDataProperty("articleList", articleList);
+  const responseBody = ctx.body as ResponseBody;
+  const articleList = (await searchArticles("")).map(formatArticle);
+  responseBody.setDataProperty("articleList", articleList);
   await next();
 };
 
 export const getArticleDetail: IMiddleware<any, {}> = async (ctx, next) => {
-  const { article_id } = ctx.request.body as Record<string, any>;
+  const responseBody = ctx.body as ResponseBody;
+  const { article_id } = ctx.request.query as Record<string, any>;
   const result = await findArticlesById(new ObjectId(article_id));
   if (result.length) {
     const article = result[0];
@@ -56,11 +48,21 @@ export const getArticleDetail: IMiddleware<any, {}> = async (ctx, next) => {
       content: article.content,
       create_time: article.createTime,
     };
-    (ctx.body as ResponseBody).setDataProperty("article_id", article_id);
-    (ctx.body as ResponseBody).setDataProperty("article_info", article_info);
+    responseBody.setDataProperty("article_id", article_id);
+    responseBody.setDataProperty("article_info", article_info);
     await next();
   } else {
-    (ctx.body as ResponseBody).setMsg("文章不存在");
+    responseBody.setMsg("文章不存在");
     return;
   }
+};
+
+export const getUserArticles: IMiddleware<any, {}> = async (ctx, next) => {
+  const responseBody = ctx.body as ResponseBody;
+  const { _id } = ctx.state.payload;
+  const result = (await findArticlesByAuthorId(new ObjectId(_id))).map(
+    formatArticle
+  );
+  responseBody.setDataProperty("own_articles", result);
+  await next();
 };
