@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "set NODE_ENV=dev&& nodemon ./src/app.ts"
+    "dev": "set NODE_ENV=dev&&nodemon ./src/app.ts",
+    "prod": "set NODE_ENV=prod&&nodemon ./src/app.ts"
   },
   "keywords": [],
   "author": "",
