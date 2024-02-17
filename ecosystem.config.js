@@ -1,8 +1,9 @@
 module.exports = {
   apps: [{
     name: 'forum-api',
-    script: './node_modules/.bin/ts-node',
-    args: '-T -r tsconfig-paths/register ./src/app.ts',
+    script: './src/app.ts',
+    interpreter: "./node_modules/.bin/ts-node",
+    interpreter_args: '-r ts-node/register -r tsconfig-paths/register',
     exec_mode: 'cluster',
     env_production: {
       NODE_ENV: "prod",
