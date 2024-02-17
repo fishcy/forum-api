@@ -1,9 +1,13 @@
 module.exports = {
   apps: [{
     name: 'forum-api',
-    script: 'src/app.ts',
+    script: './node_modules/.bin/ts-node',
+    args: '-T -r tsconfig-paths/register ./src/app.ts',
+    exec_mode: 'cluster',
     env_production: {
-      "NODE_ENV": "production"
+      NODE_ENV: "prod",
+      ASSETS_URL: 'http://fishcy.top/img',
+      PORT: 1024
     }
   }],
 
@@ -14,8 +18,7 @@ module.exports = {
       ref: 'origin/main',
       repo: 'https://github.com/fishcy/forum-api.git',
       path: '/home',
-      'post-deploy': 'npm install && pm2 reload ecosystem.config.js --env production',
-      'pre-setup': ''
+      'post-deploy': 'npm install && pm2 startOrRestart ecosystem.config.js --env production',
     }
   }
 };
