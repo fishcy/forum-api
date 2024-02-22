@@ -6,7 +6,9 @@ import { PORT } from "../config/environment";
 import { connect } from "../config/database";
 import { errorHandle } from "./middleware/errorHandle";
 
-const app = new Koa();
+const app = new Koa({
+  proxy: true,
+});
 
 connect().then(async () => {
   app.use(errorHandle);

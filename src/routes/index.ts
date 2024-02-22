@@ -3,6 +3,7 @@ import login from "./loginRoute";
 import register from "./registerRoute";
 import updateThemeColor from "./updateThemeColorRoute";
 import article from "./articleRoute";
+import captcha from "./captchaRoute";
 
 export const routes = (app: Koa) => {
   app
@@ -13,5 +14,7 @@ export const routes = (app: Koa) => {
     .use(updateThemeColor.routes())
     .use(updateThemeColor.allowedMethods())
     .use(article.routes())
-    .use(article.allowedMethods());
+    .use(article.allowedMethods())
+    .use(captcha.routes())
+    .use(captcha.allowedMethods());
 };

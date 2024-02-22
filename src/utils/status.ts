@@ -11,6 +11,11 @@ export const status401 = (ctx: RouterContext) => {
   ctx.body = "Unauthorized";
 };
 
+export const status429 = (ctx: RouterContext) => {
+  ctx.status = 429;
+  ctx.body = "Too Many Requests";
+};
+
 export const status500 = (ctx: RouterContext) => {
   ctx.status = 500;
   ctx.body = "Internal Server Error";
