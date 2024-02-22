@@ -7,7 +7,7 @@ import { ResponseBody } from "./responseBody";
 const EXPIRE_TIME = 5 * 60 * 1000;
 
 // 请求限制时间
-const LIMIT_TIME = 10 * 1000;
+const LIMIT_TIME = 1000;
 
 let userCaptcha: Record<string, { time: number; captchaText: string }> = {};
 
