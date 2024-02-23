@@ -6,7 +6,7 @@ import { User } from "../models/user";
 export const checkUserExist = async (
   _id?: ObjectId,
   email?: string,
-  phone?: string
+  phone?: string,
 ): Promise<boolean> => {
   return !!(await userDao.getUserCount({
     $or: [{ _id }, { email }, { phone }],

@@ -58,14 +58,18 @@ export const login: IMiddleware<any, {}> = async (ctx, next) => {
     }
   } else {
     let isExisted = false;
-    const { email, phone } = ctx.request.body as Body;
+    const { email, phone, password } = ctx.request.body as Body;
     isExisted = await checkUserExist(undefined, email, phone);
     // 找到用户了
     if (isExisted) {
       user = await findUser(undefined, email, phone);
+      if (user.passoword !== password) {
+        responseBody.setMsg("账号或密码错误");
+        return;
+      }
       token = generateToken({ _id: user._id.toString() });
     } else {
-      responseBody.setMsg("用户不存在");
+      responseBody.setMsg("账号或密码错误");
       return;
     }
   }
