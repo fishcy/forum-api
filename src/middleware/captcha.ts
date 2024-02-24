@@ -2,6 +2,7 @@ import { IMiddleware } from "koa-router";
 import { status429 } from "../utils/status";
 import svgCaptcha from "svg-captcha";
 import { ResponseBody } from "./responseBody";
+import { verifyToken } from "../utils/jwt";
 
 // 设置过期时间为1分钟
 const EXPIRE_TIME = 5 * 60 * 1000;
@@ -41,6 +42,21 @@ export const createSvgCaptcha: IMiddleware<any, {}> = async (ctx, next) => {
 };
 
 export const verifySvgCaptcha: IMiddleware<any, {}> = async (ctx, next) => {
+  const responseBody = ctx.body as ResponseBody;
+  // 登录时，有token不需要验证码
+  const { authorization } = ctx.request.header;
+  if (authorization) {
+    try {
+      // 验证token是否正确
+      // token正确则进入下一个中间件
+      verifyToken(authorization);
+      await next();
+    } catch (err) {
+      responseBody.setMsg("请求错误");
+    } finally {
+      return;
+    }
+  }
   const { captcha } = ctx.request.body as Record<string, any>;
   const ip = ctx.request.ip;
   const currentTime = Date.now();
@@ -50,7 +66,6 @@ export const verifySvgCaptcha: IMiddleware<any, {}> = async (ctx, next) => {
     currentTime - userCaptcha[ip].time > EXPIRE_TIME ||
     userCaptcha[ip].captchaText !== captcha.toLowerCase()
   ) {
-    const responseBody = ctx.body as ResponseBody;
     responseBody.setMsg("验证码失效或不正确");
     return;
   }
