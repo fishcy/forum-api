@@ -88,3 +88,16 @@ export const themeColor: IMiddleware<any, {}> = async (ctx, next) => {
   await updateThemeColor(new ObjectId(userId), themeColor as string);
   await next();
 };
+
+export const userInfo: IMiddleware<any, {}> = async (ctx, next) => {
+  const responseBody = ctx.body as ResponseBody;
+  const { user_id } = ctx.request.query;
+  const result = await findUser(new ObjectId(user_id as string));
+  if (result) {
+    responseBody.setDataProperty("username", result.username);
+    responseBody.setDataProperty("avatar", result.avatar);
+    await next();
+  } else {
+    responseBody.setMsg("用户不存在");
+  }
+};

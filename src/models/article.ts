@@ -3,7 +3,8 @@ import { ObjectId } from "mongodb";
 export class Article {
   _id!: ObjectId;
   title: string;
-  content: string;
+  textContent: string;
+  htmlContent: string;
   coverImage: string;
   authorId: ObjectId;
   createTime: number;
@@ -12,12 +13,14 @@ export class Article {
   viewNum: number;
   constructor(
     title: string,
-    content: string,
+    textContent: string,
+    htmlContent: string,
     authorId: ObjectId,
     coverImage?: string
   ) {
     this.title = title;
-    this.content = content;
+    this.textContent = textContent;
+    this.htmlContent = htmlContent;
     this.coverImage = coverImage ? coverImage : "";
     this.authorId = authorId;
     this.createTime = Date.now();

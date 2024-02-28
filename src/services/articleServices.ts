@@ -5,10 +5,14 @@ import { Article } from "../models/article";
 
 export const createArticle = async (
   title: string,
-  content: string,
-  authorId: ObjectId
+  textContent: string,
+  htmlContent: string,
+  authorId: ObjectId,
+  coverImage: string
 ) => {
-  return await articleDao.createArticle(new Article(title, content, authorId));
+  return await articleDao.createArticle(
+    new Article(title, textContent, htmlContent, authorId, coverImage)
+  );
 };
 
 export const searchArticles = async (searchContent: string) => {

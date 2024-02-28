@@ -1,11 +1,11 @@
 import Router from "koa-router";
-import { themeColor } from "../controllers/userController";
 import { setResponseBody } from "../middleware/responseBody";
+import { userInfo } from "../controllers/userController";
 import { authenticateJwt } from "../middleware/jwt";
 
 const router = new Router({ prefix: "/api" });
 
 router.use(setResponseBody);
-router.patch("/themeColor", authenticateJwt, themeColor);
+router.get("/get-user-info", authenticateJwt, userInfo);
 
 export default router;
