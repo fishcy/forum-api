@@ -3,7 +3,7 @@ import { status401 } from "../utils/status";
 import { IMiddleware } from "koa-router";
 
 // 验证
-export const authenticateJwt: IMiddleware<any, {}> = async (ctx, next) => {
+export const authenticateJwt: IMiddleware = async (ctx, next) => {
   const token = ctx.header.authorization;
   if (!token) {
     status401(ctx);

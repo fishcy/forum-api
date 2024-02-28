@@ -12,7 +12,7 @@ import { ASSETS_URL } from "../../config/environment";
 import { formatArticle } from "../utils/article";
 import { findUser } from "../services/userServices";
 
-export const uploadImage: IMiddleware<any, {}> = async (ctx, next) => {
+export const uploadImage: IMiddleware = async (ctx, next) => {
   const file = ctx.request.file;
   const responseBody = ctx.body as ResponseBody;
   responseBody.setDataProperty("originalname", file["originalname"]);
@@ -22,7 +22,7 @@ export const uploadImage: IMiddleware<any, {}> = async (ctx, next) => {
   await next();
 };
 
-export const uploadArticle: IMiddleware<any, {}> = async (ctx, next) => {
+export const uploadArticle: IMiddleware = async (ctx, next) => {
   const { title, textContent, htmlContent, coverImage } = ctx.request
     .body as Record<string, any>;
   const userId = ctx.state.payload._id;
@@ -40,7 +40,7 @@ export const uploadArticle: IMiddleware<any, {}> = async (ctx, next) => {
 };
 
 // 后面还要修改
-export const showArticle: IMiddleware<any, {}> = async (ctx, next) => {
+export const showArticle: IMiddleware = async (ctx, next) => {
   const responseBody = ctx.body as ResponseBody;
   const result = await searchArticles("");
   const articleList = [];
@@ -52,7 +52,7 @@ export const showArticle: IMiddleware<any, {}> = async (ctx, next) => {
   await next();
 };
 
-export const getArticleDetail: IMiddleware<any, {}> = async (ctx, next) => {
+export const getArticleDetail: IMiddleware = async (ctx, next) => {
   const responseBody = ctx.body as ResponseBody;
   const { article_id } = ctx.request.query as Record<string, any>;
   const result = await findArticlesById(new ObjectId(article_id));
@@ -75,7 +75,7 @@ export const getArticleDetail: IMiddleware<any, {}> = async (ctx, next) => {
   }
 };
 
-export const getUserArticles: IMiddleware<any, {}> = async (ctx, next) => {
+export const getUserArticles: IMiddleware = async (ctx, next) => {
   const responseBody = ctx.body as ResponseBody;
   const { user_id } = ctx.request.query;
   const result = await findArticlesByAuthorId(new ObjectId(user_id as string));

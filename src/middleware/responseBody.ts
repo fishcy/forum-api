@@ -17,7 +17,7 @@ export class ResponseBody {
   }
 }
 
-export const setResponseBody: IMiddleware<any, {}> = async (ctx, next) => {
+export const setResponseBody: IMiddleware = async (ctx, next) => {
   ctx.body = new ResponseBody();
   await next();
 };

@@ -19,7 +19,7 @@ router.use(setResponseBody);
 router.post(
   "/upload-image",
   authenticateJwt,
-  upload.single("img") as unknown as IMiddleware<any, {}>,
+  upload.single("img") as unknown as IMiddleware,
   uploadImage
 );
 

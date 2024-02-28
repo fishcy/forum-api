@@ -1,6 +1,7 @@
 import Router from "koa-router";
 import { setResponseBody } from "../middleware/responseBody";
 import { createSvgCaptcha } from "../middleware/captcha";
+import { captchaCookieInterceptor } from "../middleware/cookie";
 
 const router = new Router({
   prefix: "/api",
@@ -8,6 +9,6 @@ const router = new Router({
 
 router.use(setResponseBody);
 
-router.get("/get-captcha", createSvgCaptcha);
+router.get("/get-captcha", captchaCookieInterceptor, createSvgCaptcha);
 
 export default router;

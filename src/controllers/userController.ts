@@ -15,7 +15,7 @@ type Body = {
   password?: string;
 };
 
-export const register: IMiddleware<any, {}> = async (ctx, next) => {
+export const register: IMiddleware = async (ctx, next) => {
   const { email = "", phone = "", password = "" } = ctx.request.body as Body;
   const responseBody = ctx.body as ResponseBody;
   // 校验
@@ -40,7 +40,7 @@ export const register: IMiddleware<any, {}> = async (ctx, next) => {
   }
 };
 
-export const login: IMiddleware<any, {}> = async (ctx, next) => {
+export const login: IMiddleware = async (ctx, next) => {
   const responseBody = ctx.body as ResponseBody;
   const { authorization } = ctx.request.header;
   let user;
@@ -82,14 +82,14 @@ export const login: IMiddleware<any, {}> = async (ctx, next) => {
   responseBody.setDataProperty("themeColor", themeColor);
 };
 
-export const themeColor: IMiddleware<any, {}> = async (ctx, next) => {
+export const themeColor: IMiddleware = async (ctx, next) => {
   const { themeColor } = ctx.request.body as Record<string, any>;
   const userId = ctx.state.payload._id;
   await updateThemeColor(new ObjectId(userId), themeColor as string);
   await next();
 };
 
-export const userInfo: IMiddleware<any, {}> = async (ctx, next) => {
+export const userInfo: IMiddleware = async (ctx, next) => {
   const responseBody = ctx.body as ResponseBody;
   const { user_id } = ctx.request.query;
   const result = await findUser(new ObjectId(user_id as string));

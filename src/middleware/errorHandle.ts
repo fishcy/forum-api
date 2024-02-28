@@ -1,7 +1,7 @@
 import { IMiddleware } from "koa-router";
 import { status500 } from "../utils/status";
 
-export const errorHandle: IMiddleware<any, {}> = async (ctx, next) => {
+export const errorHandle: IMiddleware = async (ctx, next) => {
   try {
     await next();
   } catch (err) {
