@@ -1,17 +1,44 @@
+import {
+  findThumbsUpNotCancel,
+  findThumbsUpByItemId,
+} from "../services/thumbsUpServices";
 import { Article } from "../models/article";
 import { findUser } from "../services/userServices";
 
-export const formatArticle = async (item: Article) => {
-  const result = await findUser(item.authorId);
+export const formatArticle = async (article: Article, userId: string) => {
+  const author_name = (await findUser(article.authorId)).username;
+  const like_num = (await findThumbsUpByItemId(article._id.toString())).length;
+  const is_like = (await findThumbsUpNotCancel(article._id.toString(), userId))
+    .length;
   return {
-    article_id: item._id.toString(),
-    title: item.title,
-    brief_content: item.textContent.substring(0, 100),
-    cover_image: item.coverImage,
-    author_id: item.authorId.toString(),
-    author_name: result.username,
-    create_time: item.createTime,
-    like_num: item.likeNum,
-    view_num: item.viewNum,
+    article_id: article._id.toString(),
+    title: article.title,
+    brief_content: article.textContent.substring(0, 100),
+    cover_image: article.coverImage,
+    author_id: article.authorId.toString(),
+    author_name,
+    create_time: article.createTime,
+    like_num,
+    view_num: article.viewNum,
+    is_like,
+  };
+};
+
+export const formatArticleDetail = async (article: Article, userId: string) => {
+  const author_name = (await findUser(article.authorId)).username;
+  const like_num = (await findThumbsUpByItemId(article._id.toString())).length;
+  const is_like = (await findThumbsUpNotCancel(article._id.toString(), userId))
+    .length;
+  return {
+    author_id: article.authorId.toString(),
+    author_name,
+    article_id: article._id.toString(),
+    title: article.title,
+    text_content: article.textContent,
+    html_content: article.htmlContent,
+    create_time: article.createTime,
+    like_num,
+    view_num: article.viewNum,
+    is_like,
   };
 };

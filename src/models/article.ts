@@ -9,7 +9,6 @@ export class Article {
   authorId: ObjectId;
   createTime: number;
   isDelete: number;
-  likeNum: number;
   viewNum: number;
   constructor(
     title: string,
@@ -25,7 +24,6 @@ export class Article {
     this.authorId = authorId;
     this.createTime = Date.now();
     this.isDelete = 0;
-    this.likeNum = 0;
     this.viewNum = 0;
   }
 }

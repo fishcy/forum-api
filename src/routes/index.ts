@@ -5,6 +5,7 @@ import updateThemeColor from "./updateThemeColorRoute";
 import article from "./articleRoute";
 import captcha from "./captchaRoute";
 import userInfo from "./userRoute";
+import thumbsUp from "./thumbsUpRoute";
 
 export const routes = (app: Koa) => {
   app
@@ -19,5 +20,7 @@ export const routes = (app: Koa) => {
     .use(captcha.routes())
     .use(captcha.allowedMethods())
     .use(userInfo.routes())
-    .use(userInfo.allowedMethods());
+    .use(userInfo.allowedMethods())
+    .use(thumbsUp.routes())
+    .use(thumbsUp.allowedMethods());
 };

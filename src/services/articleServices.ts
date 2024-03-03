@@ -27,12 +27,14 @@ export const searchArticles = async (searchContent: string) => {
 
 export const findArticlesById = async (_id: ObjectId) => {
   return await articleDao.findArticles({
+    isDelete: 0,
     _id,
   });
 };
 
 export const findArticlesByAuthorId = async (authorId: ObjectId) => {
   return await articleDao.findArticles({
+    isDelete: 0,
     authorId,
   });
 };

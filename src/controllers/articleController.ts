@@ -9,7 +9,7 @@ import {
 } from "../services/articleServices";
 import { ObjectId } from "mongodb";
 import { ASSETS_URL } from "../../config/environment";
-import { formatArticle } from "../utils/article";
+import { formatArticle, formatArticleDetail } from "../utils/article";
 import { findUser } from "../services/userServices";
 
 export const uploadImage: IMiddleware = async (ctx, next) => {
@@ -41,11 +41,12 @@ export const uploadArticle: IMiddleware = async (ctx, next) => {
 
 // 后面还要修改
 export const showArticle: IMiddleware = async (ctx, next) => {
+  const { userId } = ctx.query as Record<string, any>;
   const responseBody = ctx.body as ResponseBody;
   const result = await searchArticles("");
   const articleList = [];
   for (const item of result) {
-    const res = await formatArticle(item);
+    const res = await formatArticle(item, userId);
     articleList.push(res);
   }
   responseBody.setDataProperty("articleList", articleList);
@@ -53,19 +54,13 @@ export const showArticle: IMiddleware = async (ctx, next) => {
 };
 
 export const getArticleDetail: IMiddleware = async (ctx, next) => {
+  const userId = ctx.state.payload?._id || "";
   const responseBody = ctx.body as ResponseBody;
   const { article_id } = ctx.request.query as Record<string, any>;
   const result = await findArticlesById(new ObjectId(article_id));
   if (result.length) {
     const article = result[0];
-    const article_info = {
-      author_id: article.authorId.toString(),
-      author_name: (await findUser(article.authorId)).username,
-      title: article.title,
-      text_content: article.textContent,
-      html_content: article.htmlContent,
-      create_time: article.createTime,
-    };
+    const article_info = await formatArticleDetail(article, userId);
     responseBody.setDataProperty("article_id", article_id);
     responseBody.setDataProperty("article_info", article_info);
     await next();
@@ -76,12 +71,14 @@ export const getArticleDetail: IMiddleware = async (ctx, next) => {
 };
 
 export const getUserArticles: IMiddleware = async (ctx, next) => {
+  const userId = ctx.state.payload?._id || "";
+  console.log(userId);
   const responseBody = ctx.body as ResponseBody;
   const { user_id } = ctx.request.query;
   const result = await findArticlesByAuthorId(new ObjectId(user_id as string));
   const articleList = [];
   for (const item of result) {
-    const res = await formatArticle(item);
+    const res = await formatArticle(item, userId);
     articleList.push(res);
   }
   responseBody.setDataProperty("own_articles", articleList);
