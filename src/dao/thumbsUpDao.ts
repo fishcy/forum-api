@@ -14,7 +14,7 @@ const findThumbsUp = async (filter: Filter<ThumbsUp>) => {
   return result;
 };
 
-const updateThumbsUpEntry = async (
+const updateThumbsUp = async (
   filter: Filter<ThumbsUp>,
   update: UpdateFilter<ThumbsUp>
 ) => {
@@ -24,5 +24,5 @@ const updateThumbsUpEntry = async (
 export default {
   createThumbsUp,
   findThumbsUp,
-  updateThumbsUpEntry,
+  updateThumbsUp,
 };

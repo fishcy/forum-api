@@ -72,7 +72,6 @@ export const getArticleDetail: IMiddleware = async (ctx, next) => {
 
 export const getUserArticles: IMiddleware = async (ctx, next) => {
   const userId = ctx.state.payload?._id || "";
-  console.log(userId);
   const responseBody = ctx.body as ResponseBody;
   const { user_id } = ctx.request.query;
   const result = await findArticlesByAuthorId(new ObjectId(user_id as string));

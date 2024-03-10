@@ -6,6 +6,8 @@ import article from "./articleRoute";
 import captcha from "./captchaRoute";
 import userInfo from "./userRoute";
 import thumbsUp from "./thumbsUpRoute";
+import comment from "./commentRoute";
+import reply from "./replyRoute";
 
 export const routes = (app: Koa) => {
   app
@@ -22,5 +24,9 @@ export const routes = (app: Koa) => {
     .use(userInfo.routes())
     .use(userInfo.allowedMethods())
     .use(thumbsUp.routes())
-    .use(thumbsUp.allowedMethods());
+    .use(thumbsUp.allowedMethods())
+    .use(comment.routes())
+    .use(comment.allowedMethods())
+    .use(reply.routes())
+    .use(reply.allowedMethods());
 };

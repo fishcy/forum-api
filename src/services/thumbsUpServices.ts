@@ -1,5 +1,4 @@
 import thumbsUpDao from "../dao/thumbsUpDao";
-
 import { ThumbsUp } from "../models/thumbsUp";
 
 export const createThumbsUp = async (itemId: string, userId: string) => {
@@ -51,7 +50,7 @@ export const thumbsUpOrCancel = async (
   userId: string,
   isCancel: choice
 ) => {
-  return await thumbsUpDao.updateThumbsUpEntry(
+  return await thumbsUpDao.updateThumbsUp(
     { itemId, userId },
     {
       $set: {

@@ -63,8 +63,6 @@ export const verifySvgCaptcha: IMiddleware = async (ctx, next) => {
   const { captcha } = ctx.request.body as Record<string, any>;
   const cookieVal = ctx.cookies.get(captchaCookieName);
   const currentTime = Date.now();
-  console.log(userCaptcha[cookieVal]);
-  console.log(captcha);
   if (
     currentTime - userCaptcha[cookieVal].time > EXPIRE_TIME ||
     userCaptcha[cookieVal].captchaText !== captcha.toLowerCase()
