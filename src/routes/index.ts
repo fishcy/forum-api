@@ -8,6 +8,8 @@ import userInfo from "./userRoute";
 import thumbsUp from "./thumbsUpRoute";
 import comment from "./commentRoute";
 import reply from "./replyRoute";
+import chat from "./chatRoute";
+import privateMessage from "./privateMessageRoute";
 
 export const routes = (app: Koa) => {
   app
@@ -28,5 +30,9 @@ export const routes = (app: Koa) => {
     .use(comment.routes())
     .use(comment.allowedMethods())
     .use(reply.routes())
-    .use(reply.allowedMethods());
+    .use(reply.allowedMethods())
+    .use(chat.routes())
+    .use(chat.allowedMethods())
+    .use(privateMessage.routes())
+    .use(privateMessage.allowedMethods());
 };

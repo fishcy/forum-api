@@ -17,7 +17,11 @@ connect().then(async () => {
   app.use(bodyParser());
   const { routes } = await import("./routes");
   routes(app);
-  app.listen(PORT, () => {
+
+  const server = app.listen(PORT, () => {
     console.log(`http://localhost:${PORT}`);
   });
+
+  const { init } = await import("./websocket");
+  init(server);
 });

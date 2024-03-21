@@ -8,7 +8,9 @@ export const captchaCookieInterceptor: IMiddleware = async (ctx, next) => {
   if (!captchaCookie) {
     const cookieVal = randomUUID();
     ctx.state.cookieVal = cookieVal;
-    ctx.cookies.set(captchaCookieName, cookieVal);
+    ctx.cookies.set(captchaCookieName, cookieVal, {
+      sameSite: "strict",
+    });
   }
   await next();
 };
