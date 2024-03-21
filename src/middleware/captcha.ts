@@ -62,6 +62,10 @@ export const verifySvgCaptcha: IMiddleware = async (ctx, next) => {
   }
   const { captcha } = ctx.request.body as Record<string, any>;
   const cookieVal = ctx.cookies.get(captchaCookieName);
+  if (!cookieVal) {
+    responseBody.setMsg("身份验证失败");
+    return;
+  }
   const currentTime = Date.now();
   if (
     currentTime - userCaptcha[cookieVal].time > EXPIRE_TIME ||
