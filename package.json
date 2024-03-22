@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "set NODE_ENV=dev&&nodemon ./src/app.ts",
-    "prod": "set NODE_ENV=prod&&nodemon ./src/app.ts"
+    "dev": "cross-env NODE_ENV=dev nodemon ./src/app.ts",
+    "prod": "cross-env NODE_ENV=prod nodemon ./src/app.ts"
   },
   "keywords": [],
   "author": "",
@@ -19,7 +19,8 @@
     "@types/koa-router": "^7.4.8",
     "@types/koa-static": "^4.0.4",
     "@types/node": "^20.11.10",
-    "@types/ws": "^8.5.10"
+    "@types/ws": "^8.5.10",
+    "cross-env": "^7.0.3"
   },
   "dependencies": {
     "@koa/multer": "^3.0.2",

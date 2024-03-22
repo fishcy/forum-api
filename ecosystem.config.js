@@ -7,8 +7,6 @@ module.exports = {
     exec_mode: 'cluster',
     env_production: {
       NODE_ENV: "prod",
-      ASSETS_URL: 'http://fishcy.top/img',
-      PORT: 1024
     }
   }],
 
