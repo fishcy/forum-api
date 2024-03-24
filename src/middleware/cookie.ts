@@ -5,6 +5,7 @@ export const captchaCookieName = "CAPTCHA_COOKIE";
 
 export const captchaCookieInterceptor: IMiddleware = async (ctx, next) => {
   const captchaCookie = ctx.cookies.get(captchaCookieName);
+  ctx.state.cookieVal = captchaCookie;
   if (!captchaCookie) {
     const cookieVal = randomUUID();
     ctx.state.cookieVal = cookieVal;

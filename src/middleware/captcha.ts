@@ -5,7 +5,7 @@ import { ResponseBody } from "./responseBody";
 import { verifyToken } from "../utils/jwt";
 import { captchaCookieName } from "../middleware/cookie";
 
-// 设置过期时间为1分钟
+// 设置过期时间为5分钟
 const EXPIRE_TIME = 5 * 60 * 1000;
 
 // 请求限制时间
