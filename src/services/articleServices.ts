@@ -38,3 +38,11 @@ export const findArticlesByAuthorId = async (authorId: ObjectId) => {
     authorId,
   });
 };
+
+export const deleteArticleByArticleId = async (articleId: ObjectId) => {
+  return await articleDao.updateArticle(articleId, {
+    $set: {
+      isDelete: 1,
+    },
+  });
+};

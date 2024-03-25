@@ -6,6 +6,7 @@ import {
   searchArticles,
   findArticlesById,
   findArticlesByAuthorId,
+  deleteArticleByArticleId,
 } from "../services/articleServices";
 import { ObjectId } from "mongodb";
 import { ASSETS_URL } from "../../config/environment";
@@ -82,4 +83,20 @@ export const getUserArticles: IMiddleware = async (ctx, next) => {
   }
   responseBody.setDataProperty("own_articles", articleList);
   await next();
+};
+
+export const deleteArticle: IMiddleware = async (ctx, next) => {
+  const responseBody = ctx.body as ResponseBody;
+  const userId = ctx.state.payload?._id || "";
+  const { article_id } = ctx.request.body as Record<string, any>;
+  const articles = await findArticlesById(new ObjectId(article_id));
+  for (const article of articles) {
+    if (article.authorId.toString() === userId) {
+      await deleteArticleByArticleId(new ObjectId(article_id));
+      responseBody.setMsg("删除成功");
+      await next();
+      return;
+    }
+  }
+  responseBody.setMsg("文章不存在");
 };

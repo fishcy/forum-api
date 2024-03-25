@@ -47,7 +47,12 @@ const handleChat = () => {
     const data: WebSocketMessage = JSON.parse(event.data.toString());
     switch (data.type) {
       case "login":
-        userId = verifyToken(data.content.split(" ")[1])._id;
+        try {
+          userId = verifyToken(data.content.split(" ")[1])._id;
+        } catch (err) {
+          console.log(err);
+          break;
+        }
         if (!clients.has(userId)) {
           clients.set(userId, new Map());
         }
