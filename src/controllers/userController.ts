@@ -34,8 +34,13 @@ export const register: IMiddleware = async (ctx, next) => {
     const token = generateToken({
       _id: insertedId.toString(),
     });
+    const { _id, username, avatar, themeColor } = await findUser(insertedId);
     // 设置token
     ctx.response.set("Authorization", token);
+    responseBody.setDataProperty("user_id", _id.toString());
+    responseBody.setDataProperty("username", username);
+    responseBody.setDataProperty("avatar", avatar);
+    responseBody.setDataProperty("themeColor", themeColor);
     await next();
   }
 };
