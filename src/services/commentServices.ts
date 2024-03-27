@@ -26,3 +26,16 @@ export const findCommentById = async (_id: ObjectId) => {
     _id,
   });
 };
+
+export const deleteCommentById = async (_id: ObjectId) => {
+  return await commentDao.updateComment(
+    {
+      _id,
+    },
+    {
+      $set: {
+        isDelete: 1,
+      },
+    }
+  );
+};

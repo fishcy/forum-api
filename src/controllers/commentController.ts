@@ -1,6 +1,7 @@
 import { IMiddleware } from "koa-router";
 import {
   createComment,
+  deleteCommentById,
   findCommentById,
   findCommentByItemId,
 } from "../services/commentServices";
@@ -38,7 +39,6 @@ export const uploadComment: IMiddleware = async (ctx, next) => {
   await next();
 };
 
-
 // 获取评论
 export const getComments: IMiddleware = async (ctx, next) => {
   const responseBody = ctx.body as ResponseBody;
@@ -63,4 +63,20 @@ export const getComments: IMiddleware = async (ctx, next) => {
   }
   responseBody.data = commentList;
   await next();
+};
+
+export const deleteComment: IMiddleware = async (ctx, next) => {
+  const responseBody = ctx.body as ResponseBody;
+  const { comment_id } = ctx.request.body as Record<string, any>;
+  const userId = ctx.state.payload._id;
+  const comments = await findCommentById(new ObjectId(comment_id));
+  for (const comment of comments) {
+    if (comment.userId.toString() === userId) {
+      await deleteCommentById(new ObjectId(comment_id));
+      responseBody.setMsg("删除成功");
+      await next();
+      return;
+    }
+  }
+  responseBody.setMsg("评论不存在");
 };
