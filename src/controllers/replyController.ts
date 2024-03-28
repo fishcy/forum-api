@@ -1,6 +1,7 @@
 import { IMiddleware } from "koa-router";
 import {
   createReply,
+  deleteReplyById,
   findReplyById,
   findReplyByItemId,
 } from "../services/replyServices";
@@ -49,4 +50,20 @@ export const getReplys: IMiddleware = async (ctx, next) => {
   }
   responseBody.data = replyList;
   await next();
+};
+
+export const deleteReply: IMiddleware = async (ctx, next) => {
+  const responseBody = ctx.body as ResponseBody;
+  const { reply_id } = ctx.request.body as Record<string, any>;
+  const userId = ctx.state.payload?._id || "";
+  const replys = await findReplyById(new ObjectId(reply_id));
+  for (const reply of replys) {
+    if (reply.userId === userId) {
+      await deleteReplyById(new ObjectId(reply_id));
+      responseBody.setMsg("删除成功");
+      await next();
+      return;
+    }
+  }
+  responseBody.setMsg("回复不存在");
 };

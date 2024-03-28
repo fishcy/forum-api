@@ -27,3 +27,16 @@ export const findReplyById = async (_id: ObjectId) => {
     _id,
   });
 };
+
+export const deleteReplyById = async (_id: ObjectId) => {
+  return await replyDao.updateReply(
+    {
+      _id,
+    },
+    {
+      $set: {
+        isDelete: 1,
+      },
+    }
+  );
+};
