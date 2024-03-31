@@ -46,3 +46,11 @@ export const deleteArticleByArticleId = async (articleId: ObjectId) => {
     },
   });
 };
+
+export const viewNumPlusOne = async (articleId: ObjectId, viewNum: number) => {
+  return await articleDao.updateArticle(articleId, {
+    $set: {
+      viewNum,
+    },
+  });
+};

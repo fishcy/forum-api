@@ -7,6 +7,7 @@ import {
   findArticlesById,
   findArticlesByAuthorId,
   deleteArticleByArticleId,
+  viewNumPlusOne,
 } from "../services/articleServices";
 import { ObjectId } from "mongodb";
 import { ASSETS_URL } from "../../config/environment";
@@ -61,6 +62,7 @@ export const getArticleDetail: IMiddleware = async (ctx, next) => {
   const result = await findArticlesById(new ObjectId(article_id));
   if (result.length) {
     const article = result[0];
+    await viewNumPlusOne(new ObjectId(article_id), article.viewNum + 1);
     const article_info = await formatArticleDetail(article, userId);
     responseBody.setDataProperty("article_id", article_id);
     responseBody.setDataProperty("article_info", article_info);
