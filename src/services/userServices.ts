@@ -6,7 +6,7 @@ import { User } from "../models/user";
 export const checkUserExist = async (
   _id?: ObjectId,
   email?: string,
-  phone?: string,
+  phone?: string
 ): Promise<boolean> => {
   return !!(await userDao.getUserCount({
     $or: [{ _id }, { email }, { phone }],
@@ -37,6 +37,19 @@ export const updateThemeColor = async (_id: ObjectId, themeColor: string) => {
   return await userDao.updateUser(_id, {
     $set: {
       themeColor,
+    },
+  });
+};
+
+export const updateUserInfo = async (
+  _id: ObjectId,
+  username: string,
+  avatar: string
+) => {
+  return await userDao.updateUser(_id, {
+    $set: {
+      username,
+      avatar,
     },
   });
 };

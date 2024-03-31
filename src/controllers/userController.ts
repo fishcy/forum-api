@@ -4,10 +4,12 @@ import {
   createUser,
   findUser,
   updateThemeColor,
+  updateUserInfo,
 } from "../services/userServices";
 import { generateToken, verifyToken } from "../utils/jwt";
 import { ResponseBody } from "../middleware/responseBody";
 import { ObjectId } from "mongodb";
+import { formatUserInfo } from "../utils/user";
 
 type Body = {
   email?: string;
@@ -105,4 +107,23 @@ export const userInfo: IMiddleware = async (ctx, next) => {
   } else {
     responseBody.setMsg("用户不存在");
   }
+};
+
+export const updateUser: IMiddleware = async (ctx, next) => {
+  const responseBody = ctx.body as ResponseBody;
+  const userId = ctx.state.payload._id;
+  const { username, avatar } = ctx.request.body as Record<string, any>;
+  const result = await findUser(new ObjectId(userId));
+  if (!result) {
+    responseBody.setMsg("用户不存在");
+    return;
+  }
+  if (!username || !avatar) {
+    responseBody.setMsg("不能为空");
+    return;
+  }
+  await updateUserInfo(new ObjectId(userId), username, avatar);
+  const userInfo = await formatUserInfo(userId);
+  responseBody.data = userInfo;
+  await next();
 };

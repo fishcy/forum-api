@@ -1,11 +1,12 @@
 import Router from "koa-router";
 import { setResponseBody } from "../middleware/responseBody";
-import { userInfo } from "../controllers/userController";
+import { updateUser, userInfo } from "../controllers/userController";
 import { authenticateJwt } from "../middleware/jwt";
 
 const router = new Router({ prefix: "/api" });
 
-router.use(setResponseBody);
-router.get("/get-user-info", authenticateJwt, userInfo);
+router.use(setResponseBody, authenticateJwt);
+router.get("/get-user-info", userInfo);
+router.patch("/update-user-info", updateUser);
 
 export default router;
