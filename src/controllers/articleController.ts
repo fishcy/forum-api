@@ -38,6 +38,7 @@ export const uploadArticle: IMiddleware = async (ctx, next) => {
   const responseBody = ctx.body as ResponseBody;
   responseBody.setDataProperty("title", title);
   responseBody.setDataProperty("article_id", result.insertedId.toString());
+  ctx.state.articleId = result.insertedId.toString();
   await next();
 };
 

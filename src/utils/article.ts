@@ -42,3 +42,12 @@ export const formatArticleDetail = async (article: Article, userId: string) => {
     is_like,
   };
 };
+
+export const formatArticleNotification = async (article: Article) => {
+  return {
+    article_id: article._id.toString(),
+    title: article.title,
+    brief_content: article.textContent.substring(0, 100),
+    cover_image: article.coverImage,
+  };
+};

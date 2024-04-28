@@ -3,9 +3,9 @@ import { WebSocket, WebSocketServer } from "ws";
 import { verifyToken } from "./utils/jwt";
 import { createPrivateMessage } from "./services/privateMessageServices";
 
-type MessageType = "login" | "heart_beat" | "private" | "group";
+type MessageType = "login" | "heart_beat" | "private" | "group" | "push";
 
-interface WebSocketMessage {
+export interface WebSocketMessage {
   type: MessageType;
   from: string;
   to: string;
@@ -32,14 +32,10 @@ const onConnection = (ws: WebSocket, req: IncomingMessage) => {
   websocket = ws;
   request = req;
 
-  route("/chat", handleChat);
+  handle();
 };
 
-const route = (url: string, cb: () => void) => {
-  if (url === request?.url) cb();
-};
-
-const handleChat = () => {
+const handle = () => {
   const prefix = "chat";
   let userId: string;
   let key: number;
@@ -61,7 +57,6 @@ const handleChat = () => {
         clientMap.set(key, websocket);
         console.log("登录成功");
         break;
-
       case "heart_beat":
         const message: WebSocketMessage = {
           type: "heart_beat",
@@ -96,11 +91,36 @@ const handleChat = () => {
 
   websocket.onerror = (err) => {
     console.log(err);
-    clients.get(userId).delete(key);
+    deleteWs(userId, key);
   };
 
   websocket.onclose = () => {
     console.log(`${key} 关闭`);
-    clients.get(userId).delete(key);
+    deleteWs(userId, key);
   };
+};
+
+const deleteWs = (userId: string, key: number) => {
+  clients.get(userId).delete(key);
+};
+
+export const pushArticleNotificationToFans = (
+  fans: string[],
+  articleNotification: any
+) => {
+  const pushMessage = JSON.stringify({
+    type: "push",
+    from: "",
+    to: "",
+    content: JSON.stringify(articleNotification),
+    creat_time: Date.now(),
+  } as WebSocketMessage);
+  for (const fansId of fans) {
+    const clientMap = clients.get(fansId);
+    if (clientMap)
+      for (const [, ws] of clientMap) {
+        console.log(pushMessage)
+        ws.send(pushMessage);
+      }
+  }
 };

@@ -9,7 +9,11 @@ import {
 import { generateToken, verifyToken } from "../utils/jwt";
 import { ResponseBody } from "../middleware/responseBody";
 import { ObjectId } from "mongodb";
-import { formatUserInfo } from "../utils/user";
+import { formatUserCardInfo, formatUserInfo } from "../utils/user";
+import {
+  countFansByFolloweeId,
+  countFolloweeByFansId,
+} from "../services/attentionServices";
 
 type Body = {
   email?: string;
@@ -98,15 +102,13 @@ export const themeColor: IMiddleware = async (ctx, next) => {
 
 export const userInfo: IMiddleware = async (ctx, next) => {
   const responseBody = ctx.body as ResponseBody;
-  const { user_id } = ctx.request.query;
+  const { user_id } = ctx.request.query as Record<string, any>;
   const result = await findUser(new ObjectId(user_id as string));
-  if (result) {
-    responseBody.setDataProperty("username", result.username);
-    responseBody.setDataProperty("avatar", result.avatar);
-    await next();
-  } else {
+  if (!result) {
     responseBody.setMsg("用户不存在");
   }
+  responseBody.data = await formatUserInfo(user_id);
+  await next();
 };
 
 export const updateUser: IMiddleware = async (ctx, next) => {
@@ -125,5 +127,17 @@ export const updateUser: IMiddleware = async (ctx, next) => {
   await updateUserInfo(new ObjectId(userId), username, avatar);
   const userInfo = await formatUserInfo(userId);
   responseBody.data = userInfo;
+  await next();
+};
+
+export const getUserCardInfo: IMiddleware = async (ctx, next) => {
+  const responseBody = ctx.body as ResponseBody;
+  const { user_id, login_user_id } = ctx.request.query as Record<string, any>;
+  const result = await findUser(new ObjectId(user_id));
+  if (!result) {
+    responseBody.setMsg("用户不存在");
+    return;
+  }
+  responseBody.data = await formatUserCardInfo(user_id, login_user_id);
   await next();
 };

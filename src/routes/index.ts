@@ -10,6 +10,7 @@ import comment from "./commentRoute";
 import reply from "./replyRoute";
 import chat from "./chatRoute";
 import privateMessage from "./privateMessageRoute";
+import attention from "./attentionRoute";
 
 export const routes = (app: Koa) => {
   app
@@ -34,5 +35,7 @@ export const routes = (app: Koa) => {
     .use(chat.routes())
     .use(chat.allowedMethods())
     .use(privateMessage.routes())
-    .use(privateMessage.allowedMethods());
+    .use(privateMessage.allowedMethods())
+    .use(attention.routes())
+    .use(attention.allowedMethods());
 };

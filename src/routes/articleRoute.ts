@@ -10,6 +10,7 @@ import {
 } from "../controllers/articleController";
 import { setResponseBody } from "../middleware/responseBody";
 import { authenticateJwt } from "../middleware/jwt";
+import { pushArticleNotification } from "../middleware/notification";
 
 const router = new Router({
   prefix: "/api",
@@ -24,7 +25,7 @@ router.post(
   uploadImage
 );
 
-router.post("/upload-article", authenticateJwt, uploadArticle);
+router.post("/upload-article", authenticateJwt, uploadArticle, pushArticleNotification);
 
 router.get("/recommend", showArticle);
 
