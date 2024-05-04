@@ -1,4 +1,4 @@
-import Router, { IMiddleware } from "koa-router";
+import Router from "koa-router";
 import { setResponseBody } from "../middleware/responseBody";
 import { authenticateJwt } from "../middleware/jwt";
 import { getChatRecord } from "../controllers/privateMessageController";

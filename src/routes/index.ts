@@ -11,6 +11,8 @@ import reply from "./replyRoute";
 import chat from "./chatRoute";
 import privateMessage from "./privateMessageRoute";
 import attention from "./attentionRoute";
+import favorite from "./favoriteRoute";
+import collection from "./collectionRoute";
 
 export const routes = (app: Koa) => {
   app
@@ -37,5 +39,9 @@ export const routes = (app: Koa) => {
     .use(privateMessage.routes())
     .use(privateMessage.allowedMethods())
     .use(attention.routes())
-    .use(attention.allowedMethods());
+    .use(attention.allowedMethods())
+    .use(favorite.routes())
+    .use(favorite.allowedMethods())
+    .use(collection.routes())
+    .use(collection.allowedMethods());
 };
